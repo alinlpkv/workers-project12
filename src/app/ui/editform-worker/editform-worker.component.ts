@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { MyWorkerType, MyWorker, MyWorkersDatabase } from 'src/app/shared/worker.model';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-editform-worker',
@@ -7,24 +8,33 @@ import { MyWorkerType, MyWorker, MyWorkersDatabase } from 'src/app/shared/worker
   styleUrls: ['./editform-worker.component.css']
 })
 export class EditformWorkerComponent implements OnInit {
-  name='';
-  surname='';
-  type:number;
+  name: string;
+  surname: string;
+  type: number;
+  id: number;
+  phone='-';
   myWorkerType = MyWorkerType;
   workers: MyWorker[]= MyWorkersDatabase;
-  id: number;
+  
+  changeForm: FormGroup;
 
-  @ViewChild('n') n: ElementRef;
-  @ViewChild('s') s : ElementRef;
+  public mask = ['+','7','(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  // @ViewChild('n') n: ElementRef;
+  // @ViewChild('s') s : ElementRef;
   @ViewChild('localID') localId: ElementRef;
-  // @Output() findWorker = new EventEmitter<number>();
-  @Output() editWorker=
-  new EventEmitter<MyWorker>();
+  @Output() editWorker= new EventEmitter<MyWorker>();
 
   constructor() { }
 
 
   ngOnInit(): void {
+    this.changeForm = new FormGroup({
+      name: new FormControl({value:null, disabled: false}, [Validators.required]),
+      surname: new FormControl({value:null, disabled: false}, [Validators.required]),
+      type: new FormControl({value:null, disabled: false}, [Validators.required]),
+      id: new FormControl({value:null, disabled: false}, [Validators.required]),
+      phone: new FormControl({value:null, disabled: false}, [Validators.required])
+    });
   }
 
   findWorker(){
@@ -33,23 +43,17 @@ export class EditformWorkerComponent implements OnInit {
   }
 
   inputWorker(man: MyWorker){
-    this.name= man.name;
-    this.surname=man.surname;
-    this.type = man.type;
-    this.id= man.id;
+    // this.name= man.name;
+    // this.surname=man.surname;
+    // this.type = man.type;
+    // this.id= man.id;
+    this.changeForm.setValue({name: man.name, surname:man.surname, type:man.type, id: man.id, phone: man.phone})
   }
 
   onEditWorker() {
-    if (this.n.nativeElement.value != '' && this.s.nativeElement.value !=''){
-    let worker: MyWorker = {
-      name: this.name,
-      surname: this.surname,
-      type: this.type,
-      id:this.id
-    }
-    console.log(worker);
-    this.editWorker.emit(worker);
-  } else alert('Заполните имя и фамилию');
+      let worker = this.changeForm.value;
+      this.editWorker.emit(worker);
+      this.changeForm.reset();
   }
 
 }

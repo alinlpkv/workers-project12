@@ -5,8 +5,9 @@
             <thead>
                 <tr>
                     <th scope="col" [style.width]="'100px'">id</th>
-                    <th scope="col" [style.width]="'40%'">Имя</th>
-                    <th scope="col">Фамилия</th>
+                    <th scope="col" [style.width]="'20%'">Имя</th>
+                    <th scope="col" [style.width]="'20%'">Фамилия</th>
+                    <th scope="col">Телефон</th>
                     <th scope="col" [style.width]="'150px'"></th>
                 </tr>
             </thead>
@@ -15,6 +16,7 @@
                     <th scope="row">{{ worker.id }}</th>
                     <td>{{ worker.name }}</td>
                     <td>{{ worker.surname }}</td>
+                    <td >{{ worker.phone}}</td>
                     <td>
                         <button (click)="onDeleteWorker(worker.id)" class="btn btn-outline-danger btn-sm">
                             Удалить
